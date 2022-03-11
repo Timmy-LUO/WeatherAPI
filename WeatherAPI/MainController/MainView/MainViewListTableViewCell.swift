@@ -15,16 +15,19 @@ class MainViewListTableViewCell: UITableViewCell {
     //MARK: - UIs
     let timeLabel: UILabel = {
         let label = UILabel()
+        label.font = .systemFont(ofSize: 40)
         return label
     }()
     
     let cityLabel: UILabel = {
         let label = UILabel()
+        label.font = .systemFont(ofSize: 50)
         return label
     }()
     
     let tempLabel: UILabel = {
         let label = UILabel()
+        label.font = .systemFont(ofSize: 50)
         return label
     }()
     
@@ -44,7 +47,7 @@ class MainViewListTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
-        
+        backgroundColor = .gray
     }
     
     required init?(coder: NSCoder) {
@@ -61,13 +64,13 @@ class MainViewListTableViewCell: UITableViewCell {
         
         addSubview(cityLabel)
         cityLabel.snp.makeConstraints { make in
-            make.top.equalTo(self).offset(5)
-            make.left.equalTo(self).offset(5)
+            make.top.equalTo(self).offset(10)
+            make.left.equalTo(self).offset(10)
         }
         
         addSubview(timeLabel)
         timeLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(customBackgroundView)
+            make.bottom.equalTo(customBackgroundView).offset(10)
             make.left.equalTo(customBackgroundView).offset(10)
         }
         

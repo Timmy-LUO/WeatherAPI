@@ -6,21 +6,36 @@
 //
 
 import UIKit
+import SnapKit
 
 class SearchView: UIView {
     
+    //MARK: - properties
+
+    
+    
     //MARK: - UIs
-    let SearchTextField: UITextField = {
+    let searchTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "test"
-        textField.font = .boldSystemFont(ofSize: 30)
-        textField.backgroundColor = .red
+        textField.placeholder = "Enter City"
+        textField.font = .boldSystemFont(ofSize: 25)
+        textField.clearButtonMode = .whileEditing
+        textField.becomeFirstResponder()
+        textField.backgroundColor = .systemGray4
         return textField
+    }()
+    
+    let searchCityTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "TableViewCell")
+        tableView.backgroundColor = .systemGray2
+        return tableView
     }()
     
     //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = .gray
         setupUI()
         
     }
@@ -31,13 +46,17 @@ class SearchView: UIView {
     
     //MARK: - SetupUI
     private func setupUI() {
-        addSubview(SearchTextField)
-        SearchTextField.snp.makeConstraints { make in
+        addSubview(searchTextField)
+        searchTextField.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide.snp.top).inset(20)
-            make.leading.equalTo(10)
-            make.trailing.equalTo(-10)
+            make.leading.equalTo(15)
+            make.trailing.equalTo(-15)
         }
         
-
+        addSubview(searchCityTableView)
+        searchCityTableView.snp.makeConstraints { make in
+            make.top.equalTo(searchTextField.snp.bottom).offset(15)
+            make.leading.trailing.bottom.equalTo(0)
+        }
     }
 }

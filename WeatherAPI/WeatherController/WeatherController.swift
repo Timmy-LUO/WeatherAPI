@@ -11,6 +11,18 @@ class WeatherController: UIViewController {
     
     //MARK: - Properties
     private let weatherView = WeatherView()
+    private var data: WeatherData
+    
+    
+    
+    init(data: WeatherData) {
+        self.data = data
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     
     
@@ -22,11 +34,17 @@ class WeatherController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+//        setupNavigationItem()
         
     }
     
-
-   
-
+    //MARK: - Methods
+//    func setupNavigationItem() {
+//        navigationItem.title = "Data Name"
+//        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationItem.largeTitleDisplayMode = .always
+//    }
+    
+    
+    
 }
