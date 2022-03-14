@@ -91,8 +91,6 @@ class WeatherView: UIView {
         return label
     }()
     
-    
-    
     let tempMinTitleLabel: UILabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)

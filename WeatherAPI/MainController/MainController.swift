@@ -29,11 +29,9 @@ class MainController: UIViewController {
         super.viewDidLoad()
         weatherListTableViewDelegate()
         setupNavigationItem()
-        headerView.searchButton.addTarget(self, action: #selector(searchButton), for: .touchUpInside)
-        
         setupCurrentWeather(city: "Taipei")
         tapGestureRecognizer()
-
+        headerView.searchButton.addTarget(self, action: #selector(searchButton), for: .touchUpInside)
     }
     
     //MARK: - Methods
@@ -42,6 +40,7 @@ class MainController: UIViewController {
         mainView.weatherListTableView.delegate = self
     }
     
+    //MARK: SetupNaviItem
     private func setupNavigationItem() {
         navigationItem.title = "Weather"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -56,6 +55,7 @@ class MainController: UIViewController {
         present(navigationController, animated: true, completion: nil)
     }
     
+    //MARK: URL Selected
     private func urlSelected(city: String) -> URL {
         let address = "https://api.openweathermap.org/data/2.5/weather?"
         let modeSelect = Int(city)
@@ -74,7 +74,8 @@ class MainController: UIViewController {
         print(urlResult)
         return urlResult
     }
-
+    
+    //MARK: Setup Current Weather
     private func setupCurrentWeather(city: String) {
         let url = urlSelected(city: city)
         let request = URLRequest(url: url, timeoutInterval: 10)
@@ -94,13 +95,7 @@ class MainController: UIViewController {
             }
         }.resume()
     }
-    
-    
-    
-    
-    
-    
-    
+
     //MARK: - UITapGestureRecognizer
     func tapGestureRecognizer() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(touch))
