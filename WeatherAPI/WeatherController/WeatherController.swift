@@ -13,8 +13,7 @@ class WeatherController: UIViewController {
     private let weatherView = WeatherView()
     private var data: WeatherData
     
-    
-    
+    //MARK: - Init
     init(data: WeatherData) {
         self.data = data
         super.init(nibName: nil, bundle: nil)
@@ -25,7 +24,6 @@ class WeatherController: UIViewController {
     }
     
     
-    
     //MARK: - Lifecycle
     override func loadView() {
         super.loadView()
@@ -34,17 +32,31 @@ class WeatherController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        setupNavigationItem()
-        
+        setupNavigationItem()
+        setContent()
     }
     
     //MARK: - Methods
-//    func setupNavigationItem() {
-//        navigationItem.title = "Data Name"
-//        navigationController?.navigationBar.prefersLargeTitles = true
-//        navigationItem.largeTitleDisplayMode = .always
-//    }
+    private func setupNavigationItem() {
+        navigationItem.title = data.name
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+    }
     
-    
-    
+    private func setContent() {
+        let url = URL(string: "https://openweathermap.org/img/wn/\(data.weather[0].icon)@2x.png")
+        let image = try? Data(contentsOf: url!)
+        if let dataImage = image {
+            let image = UIImage(data: dataImage)
+            weatherView.iconImageView.image = image
+        }
+        
+        weatherView.tempLabel.text = String((data.main.temp - 273.15).numberTransform) + "°C"
+        weatherView.tempHumanFeelDetailLabel.text = String((data.main.feels_like - 273.15).numberTransform) + "°C"
+        weatherView.tempMaxDetailLabel.text = String((data.main.temp_max - 273.15).numberTransform) + "°C"
+        weatherView.tempMinDetailLabel.text = String((data.main.temp_min - 273.15).numberTransform) + "°C"
+        weatherView.sunriseDetailLabel.text = String(data.sys.sunrise.timetransform())
+        weatherView.sunsetDetailLabel.text = String(data.sys.sunset.timetransform())
+        weatherView.windSpeedDetailLabel.text = String(data.wind.speed)
+    }
 }

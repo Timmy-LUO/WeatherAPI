@@ -8,6 +8,7 @@
 import UIKit
 
 class MainController: UIViewController {
+    
     //MARK: - Properties
     private let mainView = MainView()
     private let headerView = MainHeaderView()
@@ -108,20 +109,22 @@ class MainController: UIViewController {
         headerView.changeFahrenheitCelsiusStackView.addGestureRecognizer(tap)
     }
     
-    @objc func touch() {
+    @objc
+    func touch() {
         let leftLabel = headerView.fahrenheitLabel
         let rightLabel = headerView.celsiusLabel
-        if leftLabel.textColor == .stackViewColorC {
-            leftLabel.textColor = .stackViewColorF
-            rightLabel.textColor = .stackViewColorC
-            tempMode = .F
-        } else if leftLabel.textColor == .stackViewColorF {
+        if leftLabel.textColor == .stackViewColorF {
             leftLabel.textColor = .stackViewColorC
             rightLabel.textColor = .stackViewColorF
             tempMode = .C
+        } else if leftLabel.textColor == .stackViewColorC {
+            leftLabel.textColor = .stackViewColorF
+            rightLabel.textColor = .stackViewColorC
+            tempMode = .F
         }
         mainView.weatherListTableView.reloadData()
     }
+    
 }
 
 
@@ -148,10 +151,10 @@ extension MainController: UITableViewDataSource {
         cell.timeLabel.text = weatherDataIndex.dt.timetransform()
         DispatchQueue.main.async {
             switch self.tempMode {
-            case .C:
-                cell.tempLabel.text = String(weatherDataIndex.main.temp.numberTransform) + "°"
             case .F:
-                cell.tempLabel.text = String((weatherDataIndex.main.temp * 9 / 5 + 32).numberTransform) + "°"
+                cell.tempLabel.text = String(((weatherDataIndex.main.temp - 273.15) * 9 / 5 + 32).numberTransform) + "°"
+            case .C:
+                cell.tempLabel.text = String((weatherDataIndex.main.temp - 273.15).numberTransform) + "°"
             }
         }
         return cell

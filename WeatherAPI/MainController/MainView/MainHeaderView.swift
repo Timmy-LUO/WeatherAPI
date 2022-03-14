@@ -23,7 +23,7 @@ class MainHeaderView: UIView {
         let label = UILabel()
         label.text = "°F"
         label.font = .boldSystemFont(ofSize: 30)
-        label.textColor = .stackViewColorF
+        label.textColor = .stackViewColorC
         return label
     }()
     
@@ -39,7 +39,7 @@ class MainHeaderView: UIView {
         let label = UILabel()
         label.text = "°C"
         label.font = .boldSystemFont(ofSize: 30)
-        label.textColor = .stackViewColorC
+        label.textColor = .stackViewColorF
         return label
     }()
     
