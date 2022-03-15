@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct selectCityModel {
+    var selectCity: [WeatherData] = []
+}
+
 struct WeatherData: Codable {
     var name: String
     var id: Int

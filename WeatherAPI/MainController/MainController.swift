@@ -14,11 +14,9 @@ class MainController: UIViewController {
     private let headerView = MainHeaderView()
     var weatherData = [WeatherData]()
     var cityData = [City]()
+    var searchResult = [String]()
     var tempMode: tempTransform = .C
 
-    
-
-    
     //MARK: - Lifecycle
     override func loadView() {
         super.loadView()
@@ -119,7 +117,6 @@ class MainController: UIViewController {
         }
         mainView.weatherListTableView.reloadData()
     }
-    
 }
 
 
@@ -179,5 +176,14 @@ extension MainController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 60
+    }
+}
+
+
+extension MainController: SearchResult {
+    func searchResult(city: String, searchResult: [String]) {
+        setupCurrentWeather(city: city)
+        self.searchResult = searchResult
+        mainView.weatherListTableView.reloadData()
     }
 }

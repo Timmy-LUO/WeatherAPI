@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 
+protocol SearchResult: AnyObject {
+    func searchResult(city: String, searchResult: [String])
+}
+
 extension String {
     func urlEncoded() -> String {
         let encodeUrlString = self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
