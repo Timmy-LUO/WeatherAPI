@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol SearchResult: AnyObject {
-    func searchResult(city: String, searchResult: [String])
+    func searchResult(city: String)
 }
 
 extension String {

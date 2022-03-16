@@ -13,7 +13,7 @@ class MainController: UIViewController {
     private let mainView = MainView()
     private let headerView = MainHeaderView()
     var weatherData = [WeatherData]()
-    var cityData = [City]()
+    var cityDatas = [City]()
     var searchResult = [String]()
     var tempMode: tempTransform = .C
 
@@ -93,7 +93,31 @@ class MainController: UIViewController {
             }
         }.resume()
     }
+    
+    //MARK: - SetupCitySearch
+    func setupCitySearch() {
+        let headers = ["Authorization": APIKeys.cityAPIKey, "Accept": "application/json"]
 
+        var request = URLRequest(url: URL(string: "https://www.universal-tutorial.com/api/countries/")!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = headers
+
+        let session = URLSession.shared
+        let dataTask = session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
+            if let error = error {
+                print(error)
+            } else if let httpResponse = response as? HTTPURLResponse,let data = data {
+                print(httpResponse.statusCode)
+                let decoder = JSONDecoder()
+                if let cityData = try? decoder.decode(CityAPI.self, from: data) {
+                    self.cityDatas = cityData
+                }
+            }
+        })
+        dataTask.resume()
+    }
+    
+    
     //MARK: - UITapGestureRecognizer
     func tapGestureRecognizer() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(touch))
@@ -133,22 +157,22 @@ extension MainController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MainViewListTableViewCell.identifier, for: indexPath) as! MainViewListTableViewCell
         let weatherDataIndex = weatherData[indexPath.row]
-        let url = URL(string: "https://openweathermap.org/img/wn/\(weatherDataIndex.weather[0].icon)@2x.png")
-        let data = try? Data(contentsOf: url!)
-        if let imageData = data {
-            let image = UIImage(data: imageData)
-            cell.iconImageView.image = image!
-        }
-        cell.cityLabel.text = weatherDataIndex.name
-        cell.timeLabel.text = weatherDataIndex.dt.timetransform()
-        DispatchQueue.main.async {
-            switch self.tempMode {
-            case .F:
-                cell.tempLabel.text = String(((weatherDataIndex.main.temp - 273.15) * 9 / 5 + 32).numberTransform) + "°"
-            case .C:
-                cell.tempLabel.text = String((weatherDataIndex.main.temp - 273.15).numberTransform) + "°"
+            let url = URL(string: "https://openweathermap.org/img/wn/\(weatherDataIndex.weather[0].icon)@2x.png")
+            let data = try? Data(contentsOf: url!)
+            if let imageData = data {
+                let image = UIImage(data: imageData)
+                cell.iconImageView.image = image!
             }
-        }
+            cell.cityLabel.text = weatherDataIndex.name
+            cell.timeLabel.text = weatherDataIndex.dt.timetransform()
+            DispatchQueue.main.async {
+                switch self.tempMode {
+                case .F:
+                    cell.tempLabel.text = String(((weatherDataIndex.main.temp - 273.15) * 9 / 5 + 32).numberTransform) + "°"
+                case .C:
+                    cell.tempLabel.text = String((weatherDataIndex.main.temp - 273.15).numberTransform) + "°"
+                }
+            }
         return cell
     }
 }
@@ -181,9 +205,8 @@ extension MainController: UITableViewDelegate {
 
 
 extension MainController: SearchResult {
-    func searchResult(city: String, searchResult: [String]) {
+    func searchResult(city: String) {
         setupCurrentWeather(city: city)
-        self.searchResult = searchResult
         mainView.weatherListTableView.reloadData()
     }
 }

@@ -51,12 +51,25 @@ class WeatherController: UIViewController {
             weatherView.iconImageView.image = image
         }
         
-        weatherView.tempLabel.text = String((data.main.temp - 273.15).numberTransform) + "°C"
-        weatherView.tempHumanFeelDetailLabel.text = String((data.main.feels_like - 273.15).numberTransform) + "°C"
-        weatherView.tempMaxDetailLabel.text = String((data.main.temp_max - 273.15).numberTransform) + "°C"
-        weatherView.tempMinDetailLabel.text = String((data.main.temp_min - 273.15).numberTransform) + "°C"
-        weatherView.sunriseDetailLabel.text = String(data.sys.sunrise.timetransform())
-        weatherView.sunsetDetailLabel.text = String(data.sys.sunset.timetransform())
-        weatherView.windSpeedDetailLabel.text = String(data.wind.speed)
+        weatherView.tempLabel.text =
+        String((data.main.temp - 273.15).numberTransform) + "°C"
+        
+        weatherView.tempHumanFeelDetailLabel.text =
+        String((data.main.feels_like - 273.15).numberTransform) + "°C"
+        
+        weatherView.tempMaxDetailLabel.text =
+        String((data.main.temp_max - 273.15).numberTransform) + "°C"
+        
+        weatherView.tempMinDetailLabel.text =
+        String((data.main.temp_min - 273.15).numberTransform) + "°C"
+        
+        weatherView.sunriseDetailLabel.text =
+        String(data.sys.sunrise.timetransform())
+        
+        weatherView.sunsetDetailLabel.text =
+        String(data.sys.sunset.timetransform())
+        
+        weatherView.windSpeedDetailLabel.text =
+        String(data.wind.speed)
     }
 }

@@ -7,9 +7,14 @@
 
 import Foundation
 
-struct selectCityModel {
-    var selectCity: [WeatherData] = []
-}
+//struct SelectCityModel {
+//    var changeValue: (([WeatherData]) -> Void)?
+//    private(set) var selectCity: [WeatherData] = [] {
+//        didSet {
+//            changeValue?(selectCity)
+//        }
+//    }
+//}
 
 struct WeatherData: Codable {
     var name: String
