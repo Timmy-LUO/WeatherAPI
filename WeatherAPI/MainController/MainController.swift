@@ -203,10 +203,20 @@ extension MainController: UITableViewDelegate {
     }
 }
 
-
+//MARK: - SearchResultDelegate
 extension MainController: SearchResult {
     func searchResult(city: String) {
         setupCurrentWeather(city: city)
         mainView.weatherListTableView.reloadData()
+    }
+}
+
+//MARK: - Loading View
+extension MainController {
+    func presentLoadingVC() {
+        let loadingVC = LoadingController()
+        loadingVC.modalPresentationStyle = .overCurrentContext
+        loadingVC.modalTransitionStyle = .crossDissolve
+        present(loadingVC, animated: true, completion: nil)
     }
 }

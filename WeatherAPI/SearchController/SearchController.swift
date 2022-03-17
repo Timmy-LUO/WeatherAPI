@@ -11,9 +11,11 @@ import SnapKit
 class SearchController: UIViewController {
     //MARK: - Properties
     weak var searchCityDelegate: SearchResult?
+    
     var searchWeatherData = [WeatherData]()
 //    var cityData = [String]()
     private let searchView = SearchView()
+    
     var cities = [
         "Keelung", "Taipei", "New Taipei", "Taoyuan", "Hsinchu", "Hsinchu County", "Miaoli", "Miaoli County", "Taichung", "Changhua", "Changhua County", "Nantou County", "Nantou", "Yunlin County", "Chiayi County", "Chiayi", "Tainan", "Kaohsiung", "Pingtung County", "Pingtung", "Yilan County", "Yilan", "Hualien County", "Hualien", "Taitung County", "Taitung", "Penghu County",]
     
