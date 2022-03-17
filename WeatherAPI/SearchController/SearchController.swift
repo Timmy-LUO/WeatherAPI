@@ -10,16 +10,10 @@ import SnapKit
 
 class SearchController: UIViewController {
     //MARK: - Properties
-    weak var searchCityDelegate: SearchResult?
-    
-    var searchWeatherData = [WeatherData]()
-//    var cityData = [String]()
     private let searchView = SearchView()
-    
-    var cities = [
-        "Keelung", "Taipei", "New Taipei", "Taoyuan", "Hsinchu", "Hsinchu County", "Miaoli", "Miaoli County", "Taichung", "Changhua", "Changhua County", "Nantou County", "Nantou", "Yunlin County", "Chiayi County", "Chiayi", "Tainan", "Kaohsiung", "Pingtung County", "Pingtung", "Yilan County", "Yilan", "Hualien County", "Hualien", "Taitung County", "Taitung", "Penghu County",]
-    
-    var searchArr: [String] = [String]() {
+    weak var searchCityDelegate: SearchResult?
+    var searchData = [City]()
+    var searchArr: [City] = [] {
         didSet {
             self.searchView.searchCityTableView.reloadData()
         }
@@ -36,6 +30,8 @@ class SearchController: UIViewController {
         searchCityTableViewDelegate()
         setupNavigationItem()
         setupSearchController()
+        setupCitySearch()
+//        searchView.searchCityTableView.reloadData()
 //        searchView.searchTextField.addTarget(self, action: #selector(enterSearchCity), for: .editingDidEndOnExit)
     }
     
@@ -56,7 +52,8 @@ class SearchController: UIViewController {
 //        navigationItem.largeTitleDisplayMode = .always
         
         //leftButton
-        let leftButton = UIBarButtonItem(image: UIImage(named: "backButtonImage"), style: .plain, target: self, action: #selector(backButton))
+        let leftButton = UIBarButtonItem(image: UIImage(named: "backButtonImage"),
+                                         style: .plain, target: self, action: #selector(backButton))
         leftButton.tintColor = .green
         self.navigationItem.leftBarButtonItem = leftButton
     }
@@ -69,11 +66,35 @@ class SearchController: UIViewController {
     //MARK: - setupSearchController
     private func setupSearchController() {
         navigationItem.searchController = searchView.uiSearchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-        searchView.uiSearchController.searchBar.searchBarStyle =
-          .prominent
+        navigationItem.hidesSearchBarWhenScrolling = true
+        searchView.uiSearchController.searchBar.searchBarStyle = .prominent
         searchView.uiSearchController.searchResultsUpdater = self
         self.searchView.uiSearchController.searchBar.sizeToFit()
+    }
+    
+    //MARK: - SetupCitySearch
+    func setupCitySearch() {
+        let headers = ["Authorization": APIKeys.cityAPIKey, "Accept": "application/json"]
+
+        var request = URLRequest(url: URL(string: "https://www.universal-tutorial.com/api/countries/")!,
+                                 cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = headers
+
+        let session = URLSession.shared
+        let dataTask = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
+            if let error = error {
+                print(error)
+            } else if let httpResponse = response as? HTTPURLResponse,let data = data {
+                print("City Status Code: \(httpResponse.statusCode)")
+                let decoder = JSONDecoder()
+                if let cityData = try? decoder.decode(CityAPI.self, from: data) {
+                    self.searchData = cityData
+//                    print("searchData: \(self.searchData.count)")
+                }
+            }
+        })
+        dataTask.resume()
     }
 }
 
@@ -81,37 +102,35 @@ class SearchController: UIViewController {
 extension SearchController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (searchView.uiSearchController.isActive) {
+//            print("isActive")
             return searchArr.count
         } else {
-            return cities.count
+//            print("searchData")
+            return searchData.count
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
         if (searchView.uiSearchController.isActive) {
-            cell.textLabel?.text = searchArr[indexPath.row]
-            return cell
+            cell.textLabel?.text = searchArr[indexPath.row].countryName
         } else {
-            cell.textLabel?.text = cities[indexPath.row]
-            return cell
+            cell.textLabel?.text = searchData[indexPath.row].countryName
         }
+        
+        return cell
     }
 }
 
 //MARK: - TableViewDelegate
 extension SearchController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let city = searchArr[indexPath.row].countryName
         if (searchView.uiSearchController.isActive) {
-//            print("關鍵字 \(searchArr[indexPath.row])")
-            let city = searchArr[indexPath.row]
             searchCityDelegate?.searchResult(city: city)
             print("關鍵字 \(city)")
             dismiss(animated: true, completion: nil)
         } else {
-//            print("列表 \(cities[indexPath.row])")
-            let city = cities[indexPath.row]
             searchCityDelegate?.searchResult(city: city)
             print("列表 \(city)")
             dismiss(animated: true, completion: nil)
@@ -130,8 +149,10 @@ extension SearchController: UISearchResultsUpdating {
             return
         }
         
-        searchArr = cities.filter { city -> Bool in
-            return city.contains(searchText)
+        searchArr = searchData.filter { city -> Bool in
+            city.countryName.lowercased()
+                .contains(searchText.lowercased())
+//            return city.contains(searchText)
         }
     }
 }

@@ -29,7 +29,9 @@ class MainController: UIViewController {
         setupNavigationItem()
         setupCurrentWeather(city: "Taipei")
         tapGestureRecognizer()
+        setupCitySearch()
         headerView.searchButton.addTarget(self, action: #selector(searchButton), for: .touchUpInside)
+        
     }
     
     //MARK: - Methods
@@ -45,7 +47,7 @@ class MainController: UIViewController {
         navigationItem.largeTitleDisplayMode = .always        
     }
     
-    //MARK: SearchButton
+    //MARK: - SearchButton
     @objc
     func searchButton() {
         let vc = SearchController()
@@ -107,7 +109,7 @@ class MainController: UIViewController {
             if let error = error {
                 print(error)
             } else if let httpResponse = response as? HTTPURLResponse,let data = data {
-                print(httpResponse.statusCode)
+                print("City Status Code: \(httpResponse.statusCode)")
                 let decoder = JSONDecoder()
                 if let cityData = try? decoder.decode(CityAPI.self, from: data) {
                     self.cityDatas = cityData
@@ -175,6 +177,7 @@ extension MainController: UITableViewDataSource {
             }
         return cell
     }
+    
 }
 
 //MARK: - TableViewDelegate

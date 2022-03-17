@@ -15,22 +15,13 @@ class SearchView: UIView {
     
     
     //MARK: - UIs
-//    let searchTextField: UITextField = {
-//        let textField = UITextField()
-//        textField.placeholder = "Enter City"
-//        textField.font = .boldSystemFont(ofSize: 25)
-//        textField.clearButtonMode = .whileEditing
-//        textField.becomeFirstResponder()
-//        textField.backgroundColor = .systemGray4
-//        return textField
-//    }()
     
     var uiSearchController: UISearchController = {
         let searchController = UISearchController()
         searchController
           .hidesNavigationBarDuringPresentation = false
         searchController
-          .dimsBackgroundDuringPresentation = false
+          .obscuresBackgroundDuringPresentation = false
         return searchController
     }()
     
