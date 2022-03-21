@@ -6,13 +6,11 @@
 //
 
 import UIKit
+import Lottie
 
 class LoadingController: UIViewController {
     //MARK: - Properties
     private let loadingView = LoadingView()
-    
-    
-    
     
     
     //MARK: - Lifecycle
@@ -23,11 +21,11 @@ class LoadingController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadingView.loadingactivityView.center = view.center
-        
+//        loadingView.loadingActivityView.center = view.center
+        loadingView.cancelButton.addTarget(self, action: #selector(cancelLoadingButton), for: .touchUpInside)
     }
     
-
-    
-
+    @objc func cancelLoadingButton(_sender: UIButton) {
+        dismiss(animated: true, completion: nil)
+    }
 }

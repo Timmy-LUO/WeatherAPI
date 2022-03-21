@@ -7,29 +7,30 @@
 
 import UIKit
 import SnapKit
+import Lottie
 
 class LoadingView: UIView {
-    //MARK: UIs
-    let loadingactivityView: UIActivityIndicatorView = {
-        let activityView = UIActivityIndicatorView()
-        activityView.color = .loadingactivityColor
-        activityView.startAnimating()
-        
-        return activityView
-    }()
+    //MARK: - Properties
+    let loadingView = AnimationView(name: "loadingView")
     
-    let loadingBackgroundView: UIView = {
-        let view = UIView()
-//        view.backgroundColor = UIColor(white: 1, alpha: 0.5)
-        view.backgroundColor = .loadingColor
-        
-        return view
-    }()
     
+    //MARK: - UIs
+    let cancelButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Cancel", for: .normal)
+        return button
+    }()
+        
     //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        
+        loadingView.center = self.center
+        loadingView.animationSpeed = 2
+        loadingView.contentMode = .scaleAspectFill
+        loadingView.loopMode = .autoReverse
+        loadingView.play()
     }
     
     required init?(coder: NSCoder) {
@@ -38,15 +39,18 @@ class LoadingView: UIView {
     
     //MARK: - SetupUI
     func setupUI() {
-        addSubview(loadingBackgroundView)
-        loadingBackgroundView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        addSubview(loadingView)
+        loadingView.snp.makeConstraints { make in
+            make.width.equalTo(200)
+            make.height.equalTo(200)
+            make.centerX.equalTo(self.snp.centerX)
+            make.centerY.equalTo(self.snp.centerY)
         }
         
-        addSubview(loadingactivityView)
-        loadingactivityView.snp.makeConstraints { make in
-            make.centerX.equalTo(loadingBackgroundView.snp.centerX)
-            make.centerY.equalTo(loadingBackgroundView.snp.centerY)
+        addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.top.equalTo(loadingView.snp.bottom).offset(10)
+            make.leading.equalTo(self).offset(165)
         }
     }
 }

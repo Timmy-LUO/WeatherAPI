@@ -45,7 +45,6 @@ class CityStore {
         let session = URLSession.shared
         session.dataTask(with: request) { [weak self](data, response, error) in
             guard let self = self else { return }
-            
             if let error = error {
                 self.onError?(error)
                 return
@@ -74,18 +73,12 @@ class SearchController: UIViewController {
     //MARK: - Properties
     private let searchView = SearchView()
     weak var searchCityDelegate: SearchResult?
+    var store = CityStore()
     var searchCity = [City]() {
         didSet {
             self.searchView.searchCityTableView.reloadData()
         }
     }
-//    var searchArray: [City] = [] {
-//        didSet {
-//            self.searchView.searchCityTableView.reloadData()
-//        }
-//    }
-    
-    var store = CityStore()
     
     //MARK: - Lifecycle
     override func loadView() {
@@ -98,8 +91,6 @@ class SearchController: UIViewController {
         searchCityTableViewDelegate()
         setupNavigationItem()
         setupSearchController()
-//        setupCitySearch()
-        
         store.valueChange = { _ in
             self.searchView.searchCityTableView.reloadData()
         }
@@ -107,7 +98,6 @@ class SearchController: UIViewController {
             self.alert(message: error.localizedDescription, title: "ERROR")
         }
         store.loadCitieis()
-        
     }
     
     //MARK: - Methods
@@ -129,7 +119,6 @@ class SearchController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    
     //MARK: - SetupSearchController
     private func setupSearchController() {
         navigationItem.searchController = searchView.uiSearchController
@@ -137,31 +126,6 @@ class SearchController: UIViewController {
         searchView.uiSearchController.searchBar.searchBarStyle = .default
         searchView.uiSearchController.searchResultsUpdater = self
         self.searchView.uiSearchController.searchBar.sizeToFit()
-    }
-    
-    //MARK: - SetupCitySearch
-    func setupCitySearch() {
-        let headers = ["Authorization": APIKeys.cityAPIKey, "Accept": "application/json"]
-        
-        var request = URLRequest(url: URL(string: "https://www.universal-tutorial.com/api/countries/")!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-        request.httpMethod = "GET"
-        request.allHTTPHeaderFields = headers
-        
-        let session = URLSession.shared
-        let dataTask = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            DispatchQueue.main.async {
-                if let error = error {
-                    print(error)
-                } else if let httpResponse = response as? HTTPURLResponse,let data = data {
-                    print("City Status Code: \(httpResponse.statusCode)")
-                    let decoder = JSONDecoder()
-                    if let cityData = try? decoder.decode(CityAPI.self, from: data) {
-                        self.searchCity = cityData
-                    }
-                }
-            }
-        })
-        dataTask.resume()
     }
 }
 
@@ -189,7 +153,7 @@ extension SearchController: UITableViewDelegate {
         if searchView.uiSearchController.isActive {
             let city = store.cities[indexPath.row].countryName
             searchCityDelegate?.searchResult(city: city)
-            //            print("關鍵字 \(city)")
+//            print("關鍵字 \(city)")
             let presentingViewController = self.presentingViewController
             self.dismiss(animated: false, completion: {
                 presentingViewController?.dismiss(animated: true, completion: nil)
@@ -197,7 +161,7 @@ extension SearchController: UITableViewDelegate {
         } else {
             let city = store.cities[indexPath.row].countryName
             searchCityDelegate?.searchResult(city: city)
-            //            print("列表 \(city)")
+//            print("列表 \(city)")
             dismiss(animated: true, completion: nil)
         }
     }
