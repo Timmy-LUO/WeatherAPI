@@ -14,7 +14,7 @@ class MainController: UIViewController {
     private let headerView = MainHeaderView()
     var weatherData = [WeatherData]()
     var cityDatas = [City]()
-    var searchResult = [String]()
+    var returnResult = [City]()
     var tempMode: tempTransform = .C
 
     //MARK: - Lifecycle
@@ -29,7 +29,6 @@ class MainController: UIViewController {
         setupNavigationItem()
         setupCurrentWeather(city: "Taipei")
         tapGestureRecognizer()
-        setupCitySearch()
         headerView.searchButton.addTarget(self, action: #selector(searchButton), for: .touchUpInside)
         
     }
@@ -52,6 +51,7 @@ class MainController: UIViewController {
     func searchButton() {
         let vc = SearchController()
         let navigationController = UINavigationController(rootViewController: vc)
+        vc.searchCity = returnResult
         present(navigationController, animated: true, completion: nil)
     }
     
@@ -75,7 +75,9 @@ class MainController: UIViewController {
         return urlResult
     }
     
-    //MARK: Setup Current Weather
+    //MARK: SetupCurrentWeather
+    var onError: ((Error) -> Void)?
+    
     private func setupCurrentWeather(city: String) {
         let url = urlSelected(city: city)
         let request = URLRequest(url: url, timeoutInterval: 10)
@@ -95,30 +97,6 @@ class MainController: UIViewController {
             }
         }.resume()
     }
-    
-    //MARK: - SetupCitySearch
-    func setupCitySearch() {
-        let headers = ["Authorization": APIKeys.cityAPIKey, "Accept": "application/json"]
-
-        var request = URLRequest(url: URL(string: "https://www.universal-tutorial.com/api/countries/")!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
-        request.httpMethod = "GET"
-        request.allHTTPHeaderFields = headers
-
-        let session = URLSession.shared
-        let dataTask = session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-            if let error = error {
-                print(error)
-            } else if let httpResponse = response as? HTTPURLResponse,let data = data {
-                print("City Status Code: \(httpResponse.statusCode)")
-                let decoder = JSONDecoder()
-                if let cityData = try? decoder.decode(CityAPI.self, from: data) {
-                    self.cityDatas = cityData
-                }
-            }
-        })
-        dataTask.resume()
-    }
-    
     
     //MARK: - UITapGestureRecognizer
     func tapGestureRecognizer() {
@@ -177,7 +155,6 @@ extension MainController: UITableViewDataSource {
             }
         return cell
     }
-    
 }
 
 //MARK: - TableViewDelegate
@@ -209,6 +186,7 @@ extension MainController: UITableViewDelegate {
 //MARK: - SearchResultDelegate
 extension MainController: SearchResult {
     func searchResult(city: String) {
+        print("city string \(city)")
         setupCurrentWeather(city: city)
         mainView.weatherListTableView.reloadData()
     }

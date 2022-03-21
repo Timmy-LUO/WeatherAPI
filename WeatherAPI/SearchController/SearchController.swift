@@ -8,16 +8,84 @@
 import UIKit
 import SnapKit
 
+//MARK: - CityStore
+class CityStore {
+    
+    // 關鍵字
+    var keyword: String? {
+        didSet {
+            valueChange?(cities)
+        }
+    }
+    
+    // 原本抓到的 API 資料
+    private var _cities = [City]() {
+        didSet {
+            valueChange?(cities)
+        }
+    }
+    
+    var cities: [City] {
+        guard let keyword = keyword?.lowercased() else {
+            return _cities
+        }
+        return _cities.filter { $0.countryName.lowercased().contains(keyword) }
+    }
+    
+    var valueChange: (([City]) -> Void)?
+    var onError: ((Error) -> Void)?
+    
+    func loadCitieis() {
+        let headers = ["Authorization": APIKeys.cityAPIKey, "Accept": "application/json"]
+        
+        var request = URLRequest(url: URL(string: "https://www.universal-tutorial.com/api/countries/")!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = headers
+        
+        let session = URLSession.shared
+        session.dataTask(with: request) { [weak self](data, response, error) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                self.onError?(error)
+                return
+            }
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("City Status Code: \(httpResponse.statusCode)")
+            }
+            
+            if let data = data {
+                let decoder = JSONDecoder()
+                do {
+                    let cityData = try decoder.decode(CityAPI.self, from: data)
+                    DispatchQueue.main.async {
+                        self._cities = cityData
+                    }
+                } catch {
+                    self.onError?(error)
+                }
+            }
+        }.resume()
+    }
+}
+
 class SearchController: UIViewController {
     //MARK: - Properties
     private let searchView = SearchView()
     weak var searchCityDelegate: SearchResult?
-    var searchData = [City]()
-    var searchArr: [City] = [] {
+    var searchCity = [City]() {
         didSet {
             self.searchView.searchCityTableView.reloadData()
         }
     }
+    var searchArray: [City] = [] {
+        didSet {
+            self.searchView.searchCityTableView.reloadData()
+        }
+    }
+    
+    var store = CityStore()
     
     //MARK: - Lifecycle
     override func loadView() {
@@ -31,8 +99,17 @@ class SearchController: UIViewController {
         setupNavigationItem()
         setupSearchController()
         setupCitySearch()
-//        searchView.searchCityTableView.reloadData()
-//        searchView.searchTextField.addTarget(self, action: #selector(enterSearchCity), for: .editingDidEndOnExit)
+        //        searchView.searchCityTableView.reloadData()
+        //        searchView.searchTextField.addTarget(self, action: #selector(enterSearchCity), for: .editingDidEndOnExit)
+        
+        store.valueChange = { _ in
+            self.searchView.searchCityTableView.reloadData()
+        }
+        store.onError = { error in
+            self.alert(message: error.localizedDescription, title: "錯誤")
+        }
+        store.loadCitieis()
+        
     }
     
     //MARK: - Methods
@@ -41,16 +118,13 @@ class SearchController: UIViewController {
         searchView.searchCityTableView.delegate = self
     }
     
-//    @objc
-//    func enterSearchCity() {
-//
-//    }
+    //    @objc
+    //    func enterSearchCity() {
+    //
+    //    }
     
     private func setupNavigationItem() {
         navigationItem.title = "Search City"
-//        navigationController?.navigationBar.prefersLargeTitles = true
-//        navigationItem.largeTitleDisplayMode = .always
-        
         //leftButton
         let leftButton = UIBarButtonItem(image: UIImage(named: "backButtonImage"),
                                          style: .plain, target: self, action: #selector(backButton))
@@ -75,22 +149,22 @@ class SearchController: UIViewController {
     //MARK: - SetupCitySearch
     func setupCitySearch() {
         let headers = ["Authorization": APIKeys.cityAPIKey, "Accept": "application/json"]
-
-        var request = URLRequest(url: URL(string: "https://www.universal-tutorial.com/api/countries/")!,
-                                 cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+        
+        var request = URLRequest(url: URL(string: "https://www.universal-tutorial.com/api/countries/")!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
-
+        
         let session = URLSession.shared
         let dataTask = session.dataTask(with: request, completionHandler: { data, response, error -> Void in
-            if let error = error {
-                print(error)
-            } else if let httpResponse = response as? HTTPURLResponse,let data = data {
-                print("City Status Code: \(httpResponse.statusCode)")
-                let decoder = JSONDecoder()
-                if let cityData = try? decoder.decode(CityAPI.self, from: data) {
-                    self.searchData = cityData
-//                    print("searchData: \(self.searchData.count)")
+            DispatchQueue.main.async {
+                if let error = error {
+                    print(error)
+                } else if let httpResponse = response as? HTTPURLResponse,let data = data {
+                    print("City Status Code: \(httpResponse.statusCode)")
+                    let decoder = JSONDecoder()
+                    if let cityData = try? decoder.decode(CityAPI.self, from: data) {
+                        self.searchCity = cityData
+                    }
                 }
             }
         })
@@ -101,23 +175,22 @@ class SearchController: UIViewController {
 //MARK: - TableViewDataSource
 extension SearchController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (searchView.uiSearchController.isActive) {
-//            print("isActive")
-            return searchArr.count
-        } else {
-//            print("searchData")
-            return searchData.count
-        }
+//        if searchView.uiSearchController.isActive {
+//            return searchArray.count
+//        } else {
+//            return searchCity.count
+//        }
+        return store.cities.count
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
-        if (searchView.uiSearchController.isActive) {
-            cell.textLabel?.text = searchArr[indexPath.row].countryName
-        } else {
-            cell.textLabel?.text = searchData[indexPath.row].countryName
-        }
-        
+//        if searchView.uiSearchController.isActive {
+//            cell.textLabel?.text = searchArray[indexPath.row].countryName
+//        } else {
+//            cell.textLabel?.text = searchCity[indexPath.row].countryName
+//        }
+        cell.textLabel?.text = store.cities[indexPath.row].countryName
         return cell
     }
 }
@@ -125,34 +198,46 @@ extension SearchController: UITableViewDataSource {
 //MARK: - TableViewDelegate
 extension SearchController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let city = searchArr[indexPath.row].countryName
-        if (searchView.uiSearchController.isActive) {
+        if searchView.uiSearchController.isActive {
+            let city = store.cities[indexPath.row].countryName
             searchCityDelegate?.searchResult(city: city)
-            print("關鍵字 \(city)")
+            //            print("關鍵字 \(city)")
+            
             dismiss(animated: true, completion: nil)
         } else {
+            let city = searchCity[indexPath.row].countryName
             searchCityDelegate?.searchResult(city: city)
-            print("列表 \(city)")
+            //            print("列表 \(city)")
             dismiss(animated: true, completion: nil)
         }
-//        let city = cities[indexPath.row]
-//        cities.insert(city, at: 0)
-//        searchCityDelegate?.searchResult(city: city, searchResult: searchResult)
-//        dismiss(animated: true, completion: nil)
+        //        let city = cities[indexPath.row]
+        //        cities.insert(city, at: 0)
+        //        searchCityDelegate?.searchResult(city: city, searchResult: searchResult)
+        //        dismiss(animated: true, completion: nil)
     }
 }
 
 //MARK: - UISearchResultsUpdating
 extension SearchController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text else {
-            return
-        }
-        
-        searchArr = searchData.filter { city -> Bool in
-            city.countryName.lowercased()
-                .contains(searchText.lowercased())
-//            return city.contains(searchText)
-        }
+        store.keyword = searchController.searchBar.text
+//        guard let searchText = searchController.searchBar.text else {
+//            return
+//        }
+//
+//        searchArray = searchCity.filter { city -> Bool in
+//            city.countryName.lowercased()
+//                .contains(searchText.lowercased())
+//        }
     }
+}
+
+//MARK: - UIAlert
+extension UIViewController {
+  func alert(message: String, title: String = "") {
+    let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+    alertController.addAction(OKAction)
+    self.present(alertController, animated: true, completion: nil)
+  }
 }

@@ -9,17 +9,11 @@ import UIKit
 import SnapKit
 
 class SearchView: UIView {
-    
-    //MARK: - properties
-
-    
-    
     //MARK: - UIs
-    
     var uiSearchController: UISearchController = {
         let searchController = UISearchController()
         searchController
-          .hidesNavigationBarDuringPresentation = false
+          .hidesNavigationBarDuringPresentation = true
         searchController
           .obscuresBackgroundDuringPresentation = false
         return searchController
@@ -46,15 +40,6 @@ class SearchView: UIView {
     
     //MARK: - SetupUI
     private func setupUI() {
-//        addSubview(searchTextField)
-//        searchTextField.snp.makeConstraints { make in
-//            make.top.equalTo(safeAreaLayoutGuide.snp.top).inset(20)
-//            make.leading.equalTo(15)
-//            make.trailing.equalTo(-15)
-//        }
-        
-        
-        
         addSubview(searchCityTableView)
         searchCityTableView.snp.makeConstraints { make in
             make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(0)
