@@ -79,11 +79,11 @@ class SearchController: UIViewController {
             self.searchView.searchCityTableView.reloadData()
         }
     }
-    var searchArray: [City] = [] {
-        didSet {
-            self.searchView.searchCityTableView.reloadData()
-        }
-    }
+//    var searchArray: [City] = [] {
+//        didSet {
+//            self.searchView.searchCityTableView.reloadData()
+//        }
+//    }
     
     var store = CityStore()
     
@@ -98,15 +98,13 @@ class SearchController: UIViewController {
         searchCityTableViewDelegate()
         setupNavigationItem()
         setupSearchController()
-        setupCitySearch()
-        //        searchView.searchCityTableView.reloadData()
-        //        searchView.searchTextField.addTarget(self, action: #selector(enterSearchCity), for: .editingDidEndOnExit)
+//        setupCitySearch()
         
         store.valueChange = { _ in
             self.searchView.searchCityTableView.reloadData()
         }
         store.onError = { error in
-            self.alert(message: error.localizedDescription, title: "錯誤")
+            self.alert(message: error.localizedDescription, title: "ERROR")
         }
         store.loadCitieis()
         
@@ -117,11 +115,6 @@ class SearchController: UIViewController {
         searchView.searchCityTableView.dataSource = self
         searchView.searchCityTableView.delegate = self
     }
-    
-    //    @objc
-    //    func enterSearchCity() {
-    //
-    //    }
     
     private func setupNavigationItem() {
         navigationItem.title = "Search City"
@@ -137,11 +130,11 @@ class SearchController: UIViewController {
     }
     
     
-    //MARK: - setupSearchController
+    //MARK: - SetupSearchController
     private func setupSearchController() {
         navigationItem.searchController = searchView.uiSearchController
         navigationItem.hidesSearchBarWhenScrolling = true
-        searchView.uiSearchController.searchBar.searchBarStyle = .prominent
+        searchView.uiSearchController.searchBar.searchBarStyle = .default
         searchView.uiSearchController.searchResultsUpdater = self
         self.searchView.uiSearchController.searchBar.sizeToFit()
     }
@@ -175,20 +168,15 @@ class SearchController: UIViewController {
 //MARK: - TableViewDataSource
 extension SearchController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        if searchView.uiSearchController.isActive {
-//            return searchArray.count
-//        } else {
-//            return searchCity.count
-//        }
         return store.cities.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
 //        if searchView.uiSearchController.isActive {
-//            cell.textLabel?.text = searchArray[indexPath.row].countryName
+//            cell.textLabel?.text = store.cities[indexPath.row].countryName
 //        } else {
-//            cell.textLabel?.text = searchCity[indexPath.row].countryName
+//            cell.textLabel?.text = store.cities[indexPath.row].countryName
 //        }
         cell.textLabel?.text = store.cities[indexPath.row].countryName
         return cell
@@ -202,18 +190,16 @@ extension SearchController: UITableViewDelegate {
             let city = store.cities[indexPath.row].countryName
             searchCityDelegate?.searchResult(city: city)
             //            print("關鍵字 \(city)")
-            
-            dismiss(animated: true, completion: nil)
+            let presentingViewController = self.presentingViewController
+            self.dismiss(animated: false, completion: {
+                presentingViewController?.dismiss(animated: true, completion: nil)
+            })
         } else {
-            let city = searchCity[indexPath.row].countryName
+            let city = store.cities[indexPath.row].countryName
             searchCityDelegate?.searchResult(city: city)
             //            print("列表 \(city)")
             dismiss(animated: true, completion: nil)
         }
-        //        let city = cities[indexPath.row]
-        //        cities.insert(city, at: 0)
-        //        searchCityDelegate?.searchResult(city: city, searchResult: searchResult)
-        //        dismiss(animated: true, completion: nil)
     }
 }
 
@@ -221,14 +207,6 @@ extension SearchController: UITableViewDelegate {
 extension SearchController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         store.keyword = searchController.searchBar.text
-//        guard let searchText = searchController.searchBar.text else {
-//            return
-//        }
-//
-//        searchArray = searchCity.filter { city -> Bool in
-//            city.countryName.lowercased()
-//                .contains(searchText.lowercased())
-//        }
     }
 }
 

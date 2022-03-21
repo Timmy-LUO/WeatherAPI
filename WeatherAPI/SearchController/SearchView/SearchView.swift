@@ -22,7 +22,7 @@ class SearchView: UIView {
     let searchCityTableView: UITableView = {
         let tableView = UITableView()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "TableViewCell")
-        tableView.backgroundColor = .systemGray2
+//        tableView.backgroundColor = .systemGray2
         return tableView
     }()
     

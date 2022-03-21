@@ -16,7 +16,8 @@ class MainController: UIViewController {
     var cityDatas = [City]()
     var returnResult = [City]()
     var tempMode: tempTransform = .C
-
+    var onError: ((Error) -> Void)?
+    
     //MARK: - Lifecycle
     override func loadView() {
         super.loadView()
@@ -30,7 +31,9 @@ class MainController: UIViewController {
         setupCurrentWeather(city: "Taipei")
         tapGestureRecognizer()
         headerView.searchButton.addTarget(self, action: #selector(searchButton), for: .touchUpInside)
-        
+        onError = { error in
+            self.alert(message: error.localizedDescription, title: "ERROR")
+        }
     }
     
     //MARK: - Methods
@@ -76,22 +79,27 @@ class MainController: UIViewController {
     }
     
     //MARK: SetupCurrentWeather
-    var onError: ((Error) -> Void)?
-    
     private func setupCurrentWeather(city: String) {
         let url = urlSelected(city: city)
         let request = URLRequest(url: url, timeoutInterval: 10)
         URLSession.shared.dataTask(with: request) { data, response, error in
             DispatchQueue.main.async {
                 if let error = error {
-                    print("Error: \(error.localizedDescription)")
-                } else if let response = response as? HTTPURLResponse, let data = data {
+                    self.onError?(error)
+                }
+                
+                if let response = response as? HTTPURLResponse {
                     print("Status Code: \(response.statusCode)")
-                    let decoder = JSONDecoder()
+                }
                     
-                    if let weatherData = try? decoder.decode(WeatherData.self, from: data) {
+                if let data = data {
+                    let decoder = JSONDecoder()
+                    do {
+                        let weatherData = try decoder.decode(WeatherData.self, from: data)
                         self.weatherData.append(weatherData)
                         self.mainView.weatherListTableView.reloadData()
+                    } catch {
+                        self.onError?(error)
                     }
                 }
             }
