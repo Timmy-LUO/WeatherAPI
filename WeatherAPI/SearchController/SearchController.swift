@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-//MARK: - CityStore
+//MARK: - class CityStore
 class CityStore {
     
     // 關鍵字
@@ -35,7 +35,8 @@ class CityStore {
     var valueChange: (([City]) -> Void)?
     var onError: ((Error) -> Void)?
     
-    func loadCitieis() {
+    // MARK: - func loadCities
+    func loadCities() {
         let headers = ["Authorization": APIKeys.cityAPIKey, "Accept": "application/json"]
         
         var request = URLRequest(url: URL(string: "https://www.universal-tutorial.com/api/countries/")!, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
@@ -69,6 +70,7 @@ class CityStore {
     }
 }
 
+// MARK: - class SearchController
 class SearchController: UIViewController {
     //MARK: - Properties
     private let searchView = SearchView()
@@ -97,7 +99,7 @@ class SearchController: UIViewController {
         store.onError = { error in
             self.alert(message: error.localizedDescription, title: "ERROR")
         }
-        store.loadCitieis()
+        store.loadCities()
     }
     
     //MARK: - Methods
@@ -109,8 +111,7 @@ class SearchController: UIViewController {
     private func setupNavigationItem() {
         navigationItem.title = "Search City"
         //leftButton
-        let leftButton = UIBarButtonItem(image: UIImage(named: "backButtonImage"),
-                                         style: .plain, target: self, action: #selector(backButton))
+        let leftButton = UIBarButtonItem(image: UIImage(named: "backButtonImage"), style: .plain, target: self, action: #selector(backButton))
         leftButton.tintColor = .white
         self.navigationItem.leftBarButtonItem = leftButton
     }
@@ -137,11 +138,6 @@ extension SearchController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCell", for: indexPath)
-//        if searchView.uiSearchController.isActive {
-//            cell.textLabel?.text = store.cities[indexPath.row].countryName
-//        } else {
-//            cell.textLabel?.text = store.cities[indexPath.row].countryName
-//        }
         cell.textLabel?.text = store.cities[indexPath.row].countryName
         return cell
     }
@@ -153,7 +149,6 @@ extension SearchController: UITableViewDelegate {
         if searchView.uiSearchController.isActive {
             let city = store.cities[indexPath.row].countryName
             searchCityDelegate?.searchResult(city: city)
-//            print("關鍵字 \(city)")
             let presentingViewController = self.presentingViewController
             self.dismiss(animated: false, completion: {
                 presentingViewController?.dismiss(animated: true, completion: nil)
@@ -161,7 +156,6 @@ extension SearchController: UITableViewDelegate {
         } else {
             let city = store.cities[indexPath.row].countryName
             searchCityDelegate?.searchResult(city: city)
-//            print("列表 \(city)")
             dismiss(animated: true, completion: nil)
         }
     }
@@ -176,10 +170,10 @@ extension SearchController: UISearchResultsUpdating {
 
 //MARK: - UIAlert
 extension UIViewController {
-  func alert(message: String, title: String = "") {
-    let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-    alertController.addAction(OKAction)
-    self.present(alertController, animated: true, completion: nil)
-  }
+    func alert(message: String, title: String = "") {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(OKAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
 }

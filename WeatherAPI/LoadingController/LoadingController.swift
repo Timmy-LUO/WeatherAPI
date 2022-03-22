@@ -23,10 +23,10 @@ class LoadingController: UIViewController {
         super.viewDidLoad()
 //        loadingView.loadingActivityView.center = view.center
         loadingView.cancelButton.addTarget(self, action: #selector(cancelLoadingButton), for: .touchUpInside)
-        loadingView.loadingView.animationSpeed = 2
+        loadingView.loadingViewAnimation.animationSpeed = 2
         loadingView.contentMode = .scaleAspectFill
-        loadingView.loadingView.loopMode = .autoReverse
-        loadingView.loadingView.play()
+        loadingView.loadingViewAnimation.loopMode = .autoReverse
+        loadingView.loadingViewAnimation.play()
         let timeBack = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(cancelLoadingButton), userInfo: nil, repeats: false)
     }
     

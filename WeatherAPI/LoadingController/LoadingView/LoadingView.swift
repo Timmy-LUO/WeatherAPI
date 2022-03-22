@@ -11,7 +11,7 @@ import Lottie
 
 class LoadingView: UIView {
     //MARK: - Properties
-    let loadingView = AnimationView(name: "loadingView")
+    let loadingViewAnimation = AnimationView(name: "loadingView")
     
     
     //MARK: - UIs
@@ -24,7 +24,7 @@ class LoadingView: UIView {
     //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        loadingView.center = self.center
+        loadingViewAnimation.center = self.center
         setupUI()
     }
     
@@ -34,8 +34,8 @@ class LoadingView: UIView {
     
     //MARK: - SetupUI
     func setupUI() {
-        addSubview(loadingView)
-        loadingView.snp.makeConstraints { make in
+        addSubview(loadingViewAnimation)
+        loadingViewAnimation.snp.makeConstraints { make in
             make.width.equalTo(200)
             make.height.equalTo(200)
             make.centerX.equalTo(self.snp.centerX)
@@ -44,7 +44,7 @@ class LoadingView: UIView {
         
         addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
-            make.top.equalTo(loadingView.snp.bottom).offset(10)
+            make.top.equalTo(loadingViewAnimation.snp.bottom).offset(10)
             make.leading.equalTo(self).offset(165)
         }
     }
