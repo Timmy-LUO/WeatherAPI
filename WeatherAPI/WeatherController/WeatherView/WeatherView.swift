@@ -17,7 +17,7 @@ class WeatherView: UIView {
     //MARK: - UIs
     private let backgroundView : UIView = {
         let view = UIView()
-        view.backgroundColor = .systemPink
+        view.backgroundColor = .gray
         view.layer.cornerRadius = 8.0
         view.layer.borderColor = UIColor.secondaryLabel.cgColor
         return view

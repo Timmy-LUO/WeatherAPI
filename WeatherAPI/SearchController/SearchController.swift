@@ -111,7 +111,7 @@ class SearchController: UIViewController {
         //leftButton
         let leftButton = UIBarButtonItem(image: UIImage(named: "backButtonImage"),
                                          style: .plain, target: self, action: #selector(backButton))
-        leftButton.tintColor = .green
+        leftButton.tintColor = .white
         self.navigationItem.leftBarButtonItem = leftButton
     }
     

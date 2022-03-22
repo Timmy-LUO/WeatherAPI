@@ -36,6 +36,10 @@ class MainController: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        presentLoadingVC()
+    }
+    
     //MARK: - Methods
     private func weatherListTableViewDelegate() {
         mainView.weatherListTableView.dataSource = self
@@ -55,6 +59,7 @@ class MainController: UIViewController {
         let vc = SearchController()
         let navigationController = UINavigationController(rootViewController: vc)
         vc.searchCity = returnResult
+        vc.searchCityDelegate = self
         present(navigationController, animated: true, completion: nil)
     }
     
@@ -194,7 +199,8 @@ extension MainController: UITableViewDelegate {
 //MARK: - SearchResultDelegate
 extension MainController: SearchResult {
     func searchResult(city: String) {
-        print("city string \(city)")
+//        print("city string \(city)")
+        presentLoadingVC()
         setupCurrentWeather(city: city)
         mainView.weatherListTableView.reloadData()
     }

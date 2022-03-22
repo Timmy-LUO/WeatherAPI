@@ -31,7 +31,6 @@ class SearchView: UIView {
         super.init(frame: frame)
         backgroundColor = .gray
         setupUI()
-        
     }
     
     required init?(coder: NSCoder) {

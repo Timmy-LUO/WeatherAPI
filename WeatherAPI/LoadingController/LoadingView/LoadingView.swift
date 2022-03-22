@@ -24,13 +24,8 @@ class LoadingView: UIView {
     //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupUI()
-        
         loadingView.center = self.center
-        loadingView.animationSpeed = 2
-        loadingView.contentMode = .scaleAspectFill
-        loadingView.loopMode = .autoReverse
-        loadingView.play()
+        setupUI()
     }
     
     required init?(coder: NSCoder) {
