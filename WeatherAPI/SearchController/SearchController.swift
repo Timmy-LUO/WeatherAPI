@@ -44,7 +44,7 @@ class CityStore {
         request.allHTTPHeaderFields = headers
         
         let session = URLSession.shared
-        session.dataTask(with: request) { [weak self](data, response, error) in
+        session.dataTask(with: request) { [weak self] (data, response, error) in
             guard let self = self else { return }
             if let error = error {
                 self.onError?(error)
@@ -100,6 +100,7 @@ class SearchController: UIViewController {
             self.alert(message: error.localizedDescription, title: "ERROR")
         }
         store.loadCities()
+        
     }
     
     //MARK: - Methods
@@ -112,7 +113,7 @@ class SearchController: UIViewController {
         navigationItem.title = "Search City"
         //leftButton
         let leftButton = UIBarButtonItem(image: UIImage(named: "backButtonImage"), style: .plain, target: self, action: #selector(backButton))
-        leftButton.tintColor = .white
+        leftButton.tintColor = .orange
         self.navigationItem.leftBarButtonItem = leftButton
     }
     
@@ -127,6 +128,41 @@ class SearchController: UIViewController {
         searchView.uiSearchController.searchBar.searchBarStyle = .default
         searchView.uiSearchController.searchResultsUpdater = self
         self.searchView.uiSearchController.searchBar.sizeToFit()
+        searchView.uiSearchController.searchBar.delegate = self
+    }
+    
+    
+    func urlSelected(city: String) -> URL {
+        let address = "https://api.openweathermap.org/data/2.5/weather?"
+        let modeSelect = Int(city)
+        let urlResult: URL
+
+        if city.contains(",") {
+            let cityCoord = city.components(separatedBy: ",")
+            urlResult = URL(string: address + "lat=\(cityCoord[1].urlEncoded())" + "&lon=\(cityCoord[0].urlEncoded())" + "&appid=\(APIKeys.weatherAPIKey)")!
+        } else {
+            if modeSelect != nil {
+                urlResult = URL(string: address + "id=\(city.urlEncoded())" + "&appid=\(APIKeys.weatherAPIKey)")!
+            } else {
+                urlResult = URL(string: address + "q=\(city.urlEncoded())" + "&appid=\(APIKeys.weatherAPIKey)")!
+            }
+        }
+        print("urlResult: \(urlResult)")
+        return urlResult
+    }
+    
+}
+//MARK: - SearchBarDelegate
+extension SearchController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//        print(searchBar.text)
+        searchCityDelegate?.searchResult(city: searchBar.text!)
+        let presentingViewController = self.presentingViewController
+        self.dismiss(animated: false, completion: {
+            presentingViewController?.dismiss(animated: true, completion: nil)
+        })
+        
+        
     }
 }
 

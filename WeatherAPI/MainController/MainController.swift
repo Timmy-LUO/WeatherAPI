@@ -28,9 +28,10 @@ class MainController: UIViewController {
         super.viewDidLoad()
         weatherListTableViewDelegate()
         setupNavigationItem()
-        setupCurrentWeather(city: "Taipei")
+        setupCurrentWeather(city: "Taiwan")
         tapGestureRecognizer()
         headerView.searchButton.addTarget(self, action: #selector(searchButton), for: .touchUpInside)
+        
         onError = { error in
             self.alert(message: error.localizedDescription, title: "ERROR")
         }
@@ -53,7 +54,7 @@ class MainController: UIViewController {
         navigationItem.largeTitleDisplayMode = .always        
     }
     
-    //MARK: - SearchButton
+    //MARK: SearchButton
     @objc
     func searchButton() {
         let vc = SearchController()
@@ -64,27 +65,30 @@ class MainController: UIViewController {
     }
     
     //MARK: URL Selected
-    private func urlSelected(city: String) -> URL {
+    func urlSelected(city: String) -> URL {
         let address = "https://api.openweathermap.org/data/2.5/weather?"
         let modeSelect = Int(city)
         let urlResult: URL
 
         if city.contains(",") {
             let cityCoord = city.components(separatedBy: ",")
+            print("lat lon")
             urlResult = URL(string: address + "lat=\(cityCoord[1].urlEncoded())" + "&lon=\(cityCoord[0].urlEncoded())" + "&appid=\(APIKeys.weatherAPIKey)")!
         } else {
             if modeSelect != nil {
+                print("id")
                 urlResult = URL(string: address + "id=\(city.urlEncoded())" + "&appid=\(APIKeys.weatherAPIKey)")!
             } else {
+                print("city")
                 urlResult = URL(string: address + "q=\(city.urlEncoded())" + "&appid=\(APIKeys.weatherAPIKey)")!
             }
         }
-        print(urlResult)
+        print("urlResult: \(urlResult)")
         return urlResult
     }
     
     //MARK: SetupCurrentWeather
-    private func setupCurrentWeather(city: String) {
+    func setupCurrentWeather(city: String) {
         let url = urlSelected(city: city)
         let request = URLRequest(url: url, timeoutInterval: 10)
         URLSession.shared.dataTask(with: request) { data, response, error in

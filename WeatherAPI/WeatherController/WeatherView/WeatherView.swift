@@ -39,6 +39,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "Temp Human Feel"
+        label.textAlignment = NSTextAlignment.left
         return label
     }()
     
@@ -46,6 +47,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "test"
+        label.textAlignment = NSTextAlignment.left
         return label
     }()
         
@@ -53,6 +55,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "Sunrise"
+        label.textAlignment = NSTextAlignment.right
         return label
     }()
     
@@ -60,6 +63,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "test"
+        label.textAlignment = NSTextAlignment.right
         return label
     }()
     
@@ -67,6 +71,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "Sunset"
+        label.textAlignment = NSTextAlignment.right
         return label
     }()
     
@@ -74,6 +79,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "test"
+        label.textAlignment = NSTextAlignment.right
         return label
     }()
     
@@ -81,6 +87,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "Temp Max"
+        label.textAlignment = NSTextAlignment.left
         return label
     }()
     
@@ -88,6 +95,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "test"
+        label.textAlignment = NSTextAlignment.left
         return label
     }()
     
@@ -95,6 +103,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "Temp Min"
+        label.textAlignment = NSTextAlignment.left
         return label
     }()
     
@@ -102,6 +111,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "test"
+        label.textAlignment = NSTextAlignment.left
         return label
     }()
     
@@ -109,6 +119,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "Wind Speed"
+        label.textAlignment = NSTextAlignment.right
         return label
     }()
     
@@ -116,6 +127,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "test"
+        label.textAlignment = NSTextAlignment.right
         return label
     }()
     

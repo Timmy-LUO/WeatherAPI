@@ -39,6 +39,7 @@ class WeatherController: UIViewController {
     //MARK: - Methods
     private func setupNavigationItem() {
         navigationItem.title = data.name
+        self.navigationController?.navigationBar.tintColor = .orange
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
     }
