@@ -192,7 +192,7 @@ class WeatherView: UIView {
     //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .gray
+        backgroundColor = .cellColor
         setupUI()
     }
     

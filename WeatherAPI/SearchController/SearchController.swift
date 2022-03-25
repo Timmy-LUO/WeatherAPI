@@ -100,7 +100,6 @@ class SearchController: UIViewController {
             self.alert(message: error.localizedDescription, title: "ERROR")
         }
         store.loadCities()
-        
     }
     
     //MARK: - Methods
@@ -109,6 +108,7 @@ class SearchController: UIViewController {
         searchView.searchCityTableView.delegate = self
     }
     
+    //MARK: SetUPNaviItem
     private func setupNavigationItem() {
         navigationItem.title = "Search City"
         //leftButton
@@ -150,8 +150,8 @@ class SearchController: UIViewController {
         print("urlResult: \(urlResult)")
         return urlResult
     }
-    
 }
+
 //MARK: - SearchBarDelegate
 extension SearchController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -161,8 +161,6 @@ extension SearchController: UISearchBarDelegate {
         self.dismiss(animated: false, completion: {
             presentingViewController?.dismiss(animated: true, completion: nil)
         })
-        
-        
     }
 }
 

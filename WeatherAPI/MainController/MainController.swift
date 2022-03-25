@@ -28,7 +28,7 @@ class MainController: UIViewController {
         super.viewDidLoad()
         weatherListTableViewDelegate()
         setupNavigationItem()
-        setupCurrentWeather(city: "Taiwan")
+        setupCurrentWeather(city: "Taipei")
         tapGestureRecognizer()
         headerView.searchButton.addTarget(self, action: #selector(searchButton), for: .touchUpInside)
         
@@ -72,18 +72,15 @@ class MainController: UIViewController {
 
         if city.contains(",") {
             let cityCoord = city.components(separatedBy: ",")
-            print("lat lon")
             urlResult = URL(string: address + "lat=\(cityCoord[1].urlEncoded())" + "&lon=\(cityCoord[0].urlEncoded())" + "&appid=\(APIKeys.weatherAPIKey)")!
         } else {
             if modeSelect != nil {
-                print("id")
                 urlResult = URL(string: address + "id=\(city.urlEncoded())" + "&appid=\(APIKeys.weatherAPIKey)")!
             } else {
-                print("city")
                 urlResult = URL(string: address + "q=\(city.urlEncoded())" + "&appid=\(APIKeys.weatherAPIKey)")!
             }
         }
-        print("urlResult: \(urlResult)")
+//        print("urlResult: \(urlResult)")
         return urlResult
     }
     
@@ -139,7 +136,6 @@ class MainController: UIViewController {
         mainView.weatherListTableView.reloadData()
     }
 }
-
 
 //MARK: - TableViewDataSource
 extension MainController: UITableViewDataSource {
