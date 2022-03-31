@@ -69,6 +69,11 @@ class MainController: UIViewController {
         let address = "https://api.openweathermap.org/data/2.5/weather?"
         let modeSelect = Int(city)
         let urlResult: URL
+        
+        /// query
+        var componenets = URLComponents()
+        componenets.queryItems = [URLQueryItem(name: "", value: "")]
+//        componenets.url
 
         if city.contains(",") {
             let cityCoord = city.components(separatedBy: ",")
@@ -83,6 +88,7 @@ class MainController: UIViewController {
 //        print("urlResult: \(urlResult)")
         return urlResult
     }
+    
     
     //MARK: SetupCurrentWeather
     func setupCurrentWeather(city: String) {
@@ -214,4 +220,10 @@ extension MainController {
         loadingVC.modalTransitionStyle = .crossDissolve
         present(loadingVC, animated: true, completion: nil)
     }
+}
+
+enum WeahterMethod {
+    case coord(Int, Int)
+    case cityId(Int)
+    case cityName(String)
 }

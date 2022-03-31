@@ -30,7 +30,7 @@ class WeatherView: UIView {
     
     var tempLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 40)
+        label.font = .boldSystemFont(ofSize: 40)
         label.text = "test"
         return label
     }()
@@ -39,7 +39,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "Temp Human Feel"
-        label.textAlignment = NSTextAlignment.left
+        label.textAlignment = .left
         return label
     }()
     
@@ -71,7 +71,7 @@ class WeatherView: UIView {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 20)
         label.text = "Sunset"
-        label.textAlignment = NSTextAlignment.right
+        label.textAlignment = .right
         return label
     }()
     
