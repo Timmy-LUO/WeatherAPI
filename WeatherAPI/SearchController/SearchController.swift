@@ -131,7 +131,6 @@ class SearchController: UIViewController {
         searchView.uiSearchController.searchBar.delegate = self
     }
     
-    
     func urlSelected(city: String) -> URL {
         let address = "https://api.openweathermap.org/data/2.5/weather?"
         let modeSelect = Int(city)

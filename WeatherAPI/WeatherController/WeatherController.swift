@@ -8,7 +8,6 @@
 import UIKit
 
 class WeatherController: UIViewController {
-    
     //MARK: - Properties
     private let weatherView = WeatherView()
     private var data: WeatherData
@@ -22,7 +21,6 @@ class WeatherController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     
     //MARK: - Lifecycle
     override func loadView() {
