@@ -51,7 +51,8 @@ class MainController: UIViewController {
     private func setupNavigationItem() {
         navigationItem.title = "Weather"
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.largeTitleDisplayMode = .always        
+        navigationItem.largeTitleDisplayMode = .always
+        
     }
     
     //MARK: SearchButton
@@ -155,6 +156,11 @@ extension MainController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MainViewListTableViewCell.identifier, for: indexPath) as! MainViewListTableViewCell
+        cell.layer.borderColor = UIColor.black.cgColor
+        cell.layer.borderWidth = 1
+        cell.layer.cornerRadius = 30
+        cell.clipsToBounds = true
+        
         let weatherDataIndex = weatherData[indexPath.row]
             let url = URL(string: "https://openweathermap.org/img/wn/\(weatherDataIndex.weather[0].icon)@2x.png")
             let data = try? Data(contentsOf: url!)
@@ -182,6 +188,8 @@ extension MainController: UITableViewDelegate {
         let data = weatherData[indexPath.row]
         let vc = WeatherController(data: data)
         navigationController?.pushViewController(vc, animated: true)
+        tableView.deselectRow(at: indexPath, animated: false)
+        presentLoadingVC()
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {

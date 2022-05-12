@@ -9,5 +9,5 @@ import Foundation
 
 struct APIKeys {
     static let weatherAPIKey: String = "115ec2129e41a0786baa0ea1dba1d5bc"
-    static let cityAPIKey: String = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfZW1haWwiOiJhMjIwMDA5OTk2QGdtYWlsLmNvbSIsImFwaV90b2tlbiI6Ilh5bE9tekNHbV82emg3RUNheG8xSVZOVmoyNjFWNlhON0tncnZKUjJxbEJVNHZ1Uk5KVkg3cnRuRWJnVjRVUmVONkkifSwiZXhwIjoxNjQ4NTE5NTg5fQ.ejMfaKICGv1-YwPN8gq96DOx3Q5hQXeUbNIlfI0Yj-Y"
+    static let cityAPIKey: String = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfZW1haWwiOiJhMjIwMDA5OTk2QGdtYWlsLmNvbSIsImFwaV90b2tlbiI6Ilh5bE9tekNHbV82emg3RUNheG8xSVZOVmoyNjFWNlhON0tncnZKUjJxbEJVNHZ1Uk5KVkg3cnRuRWJnVjRVUmVONkkifSwiZXhwIjoxNjUyNDQxOTE3fQ.rpOnQgwhmHyZrBiq0-OayhfMJUmhhUTYIRn0nrDbBWc"
 }
