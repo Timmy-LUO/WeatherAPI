@@ -10,5 +10,4 @@
 ### 功能：
 
 
-
-![image](https://github.com/terminal201467/TaichungMaskFinder/blob/main/GIF/AreaSearch.GIF)
+![image](https://github.com/Timmy-LUO/WeatherAPI/blob/main/GIF/WeatherAPI.gif)
