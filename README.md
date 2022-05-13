@@ -5,7 +5,7 @@
 1. URLSession Get data
 2. UISearchController (輸入城市名稱、經緯度，找到對應城市的天氣)
 3. 加入 UITapGestureRecognizer 可切換攝氏、華氏溫度
-4. 加入 Lottie 套件，載入時告知使用者資料正在loading
+4. 加入 Lottie 套件，載入時告知使用者資料正在 Loading
 5. AutoLayout (SnapKit)
 6. Delegation
 7. MVC 設置
